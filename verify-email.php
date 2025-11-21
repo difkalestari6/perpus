@@ -1,43 +1,40 @@
 <?php
+session_start();
 require_once 'config.php';
+require_once 'functions.php';
 
-$message = '';
-$success = false;
+$error = '';
+$success = '';
 
 if (isset($_GET['token'])) {
-    $token = sanitize($_GET['token']); // ✅ FIXED - Hapus parameter $conn
+    // HAPUS $conn dari parameter sanitize()
+    $token = sanitize($_GET['token']);
     
-    // Cari user dengan token ini
-    $query = "SELECT id, email_verified FROM users WHERE verification_token = ?";
+    // Cari user berdasarkan token
+    $query = "SELECT id, username, email FROM users WHERE verification_token = ? AND email_verified = 0";
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "s", $token);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     
-    if (mysqli_num_rows($result) == 1) {
+    if (mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
         
-        if ($user['email_verified'] == 1) {
-            $message = 'Email Anda sudah diverifikasi sebelumnya.';
-            $success = true;
+        // Update status verifikasi
+        $update_query = "UPDATE users SET email_verified = 1, verification_token = NULL WHERE id = ?";
+        $stmt = mysqli_prepare($conn, $update_query);
+        mysqli_stmt_bind_param($stmt, "i", $user['id']);
+        
+        if (mysqli_stmt_execute($stmt)) {
+            $success = 'Email berhasil diverifikasi! Silakan login untuk melanjutkan.';
         } else {
-            // Update status verifikasi
-            $update_query = "UPDATE users SET email_verified = 1, verification_token = NULL WHERE verification_token = ?";
-            $stmt = mysqli_prepare($conn, $update_query);
-            mysqli_stmt_bind_param($stmt, "s", $token);
-            
-            if (mysqli_stmt_execute($stmt)) {
-                $message = 'Email berhasil diverifikasi! Sekarang Anda bisa login.';
-                $success = true;
-            } else {
-                $message = 'Terjadi kesalahan saat verifikasi email.';
-            }
+            $error = 'Terjadi kesalahan saat verifikasi. Silakan coba lagi.';
         }
     } else {
-        $message = 'Token verifikasi tidak valid atau sudah kadaluarsa.';
+        $error = 'Token verifikasi tidak valid atau sudah digunakan.';
     }
 } else {
-    $message = 'Token verifikasi tidak ditemukan.';
+    $error = 'Token verifikasi tidak ditemukan.';
 }
 ?>
 
@@ -49,34 +46,45 @@ if (isset($_GET['token'])) {
     <title>Verifikasi Email - Perpustakaan Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-purple-600 to-blue-500 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg text-center">
-        <!-- Icon -->
-        <div class="text-6xl mb-6">
-            <?php echo $success ? '✅' : '❌'; ?>
+<body class="bg-gradient-to-br from-green-600 to-blue-500 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="text-5xl mb-3">
+                <?php echo $success ? '✅' : '❌'; ?>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Verifikasi Email</h1>
+            <p class="text-gray-600 text-sm">Perpustakaan Online</p>
         </div>
         
-        <!-- Title -->
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">
-            <?php echo $success ? 'Verifikasi Berhasil!' : 'Verifikasi Gagal'; ?>
-        </h1>
-        
-        <!-- Message -->
-        <p class="text-gray-600 mb-8 leading-relaxed">
-            <?php echo $message; ?>
-        </p>
-        
-        <!-- Button -->
+        <!-- Alert Success -->
         <?php if ($success): ?>
+            <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded" role="alert">
+                <p class="font-medium">Berhasil!</p>
+                <p class="text-sm mt-1"><?php echo $success; ?></p>
+            </div>
             <a href="login.php" 
-               class="inline-block bg-gradient-to-r from-purple-600 to-blue-500 text-white font-semibold px-8 py-3 rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+               class="block w-full bg-gradient-to-r from-green-600 to-blue-500 text-white font-semibold py-3 rounded-lg text-center hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
                 Login Sekarang
             </a>
-        <?php else: ?>
-            <a href="register.php" 
-               class="inline-block bg-gradient-to-r from-purple-600 to-blue-500 text-white font-semibold px-8 py-3 rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
-                Kembali ke Registrasi
-            </a>
+        <?php endif; ?>
+        
+        <!-- Alert Error -->
+        <?php if ($error): ?>
+            <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded" role="alert">
+                <p class="font-medium">Gagal!</p>
+                <p class="text-sm mt-1"><?php echo $error; ?></p>
+            </div>
+            <div class="space-y-3">
+                <a href="register.php" 
+                   class="block w-full bg-gradient-to-r from-purple-600 to-blue-500 text-white font-semibold py-3 rounded-lg text-center hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
+                    Daftar Ulang
+                </a>
+                <a href="login.php" 
+                   class="block w-full bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg text-center hover:bg-gray-300 transition duration-200">
+                    Kembali ke Login
+                </a>
+            </div>
         <?php endif; ?>
     </div>
 </body>

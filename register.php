@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             // Insert user baru
             $insert_query = "INSERT INTO users (username, email, password, full_name, role, email_verified) 
-                           VALUES (?, ?, ?, ?, 'user', 1)";
+                           VALUES (?, ?, ?, ?, 'user', 0)";
             $stmt = mysqli_prepare($conn, $insert_query);
             mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $hashed_password, $full_name);
             
@@ -56,13 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $user_id = mysqli_insert_id($conn);
                 
                 // Kirim email verifikasi
-                // $send_result = sendVerificationEmail($conn, $user_id, $email, $username);
+                $send_result = sendVerificationEmail($conn, $user_id, $email, $username);
                 
-                // if ($send_result['success']) {
-                //     $success = 'Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.';
-                // } else {
-                //     $success = 'Registrasi berhasil! Namun email verifikasi gagal dikirim. Hubungi admin.';
-                // }
+                if ($send_result['success']) {
+                    $success = 'Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.';
+                } else {
+                    $success = 'Registrasi berhasil! Namun email verifikasi gagal dikirim. Hubungi admin.';
+                }
             } else {
                 $error = 'Terjadi kesalahan saat registrasi. Silakan coba lagi.';
             }

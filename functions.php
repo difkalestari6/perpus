@@ -69,7 +69,7 @@ function redirect($url) {
  */
 function canReadBook($conn, $user_id, $book) {
     // Jika buku gratis, semua orang bisa baca
-    if ($book['is_free'] == 1) {
+    if (isset($book['is_free']) && $book['is_free'] == 1) {
         return true;
     }
     
@@ -84,16 +84,29 @@ function canReadBook($conn, $user_id, $book) {
     }
     
     // Cek apakah user sudah membeli buku ini
-    return hasPurchasedBook($conn, $user_id, $book['id']);
+    if (isset($book['id'])) {
+        return hasPurchasedBook($conn, $user_id, $book['id']);
+    }
+    
+    return false;
 }
 
 /**
  * Cek apakah user sudah membeli buku tertentu
  */
 function hasPurchasedBook($conn, $user_id, $book_id) {
+    if (!$user_id || !$book_id) {
+        return false;
+    }
+    
     $query = "SELECT id FROM book_purchases 
               WHERE user_id = ? AND book_id = ?";
     $stmt = mysqli_prepare($conn, $query);
+    
+    if (!$stmt) {
+        return false;
+    }
+    
     mysqli_stmt_bind_param($stmt, "ii", $user_id, $book_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -105,12 +118,21 @@ function hasPurchasedBook($conn, $user_id, $book_id) {
  * Cek apakah user punya subscription aktif
  */
 function hasActiveSubscription($conn, $user_id) {
+    if (!$user_id) {
+        return false;
+    }
+    
     $query = "SELECT id FROM user_subscriptions 
               WHERE user_id = ? 
               AND is_active = 1 
               AND end_date >= NOW()
               LIMIT 1";
     $stmt = mysqli_prepare($conn, $query);
+    
+    if (!$stmt) {
+        return false;
+    }
+    
     mysqli_stmt_bind_param($stmt, "i", $user_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -122,6 +144,11 @@ function hasActiveSubscription($conn, $user_id) {
  * Get subscription info user
  */
 function getUserSubscription($conn, $user_id) {
+    // Validasi user_id
+    if (!$user_id) {
+        return null;
+    }
+    
     $query = "SELECT us.*, sp.name as plan_name, sp.duration_days 
               FROM user_subscriptions us
               JOIN subscription_plans sp ON us.plan_id = sp.id
@@ -131,9 +158,18 @@ function getUserSubscription($conn, $user_id) {
               ORDER BY us.end_date DESC
               LIMIT 1";
     $stmt = mysqli_prepare($conn, $query);
+    
+    if (!$stmt) {
+        return null;
+    }
+    
     mysqli_stmt_bind_param($stmt, "i", $user_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
+    
+    if (!$result) {
+        return null;
+    }
     
     return mysqli_fetch_assoc($result);
 }
@@ -142,17 +178,32 @@ function getUserSubscription($conn, $user_id) {
  * Get daftar buku yang dibeli user
  */
 function getUserPurchasedBooks($conn, $user_id) {
+    $books = array();
+    
+    // Validasi user_id
+    if (!$user_id) {
+        return $books;
+    }
+    
     $query = "SELECT b.*, bp.purchased_at, bp.price as paid_price
               FROM book_purchases bp
               JOIN books b ON bp.book_id = b.id
               WHERE bp.user_id = ?
               ORDER BY bp.purchased_at DESC";
     $stmt = mysqli_prepare($conn, $query);
+    
+    if (!$stmt) {
+        return $books;
+    }
+    
     mysqli_stmt_bind_param($stmt, "i", $user_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     
-    $books = array();
+    if (!$result) {
+        return $books;
+    }
+    
     while ($row = mysqli_fetch_assoc($result)) {
         $books[] = $row;
     }
@@ -433,12 +484,20 @@ function sendResetPasswordEmail($conn, $email) {
  * Format tanggal Indonesia
  */
 function formatTanggal($date) {
+    if (!$date) {
+        return '-';
+    }
+    
     $bulan = array(
         1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
         'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
     );
     
     $timestamp = strtotime($date);
+    if (!$timestamp) {
+        return '-';
+    }
+    
     $tanggal = date('d', $timestamp);
     $bulan_num = date('n', $timestamp);
     $tahun = date('Y', $timestamp);
@@ -450,7 +509,7 @@ function formatTanggal($date) {
  * Generate excerpt dari text
  */
 function excerpt($text, $limit = 150) {
-    if (strlen($text) <= $limit) {
+    if (!$text || strlen($text) <= $limit) {
         return $text;
     }
     
@@ -465,6 +524,10 @@ function excerpt($text, $limit = 150) {
  */
 function uploadImage($file, $target_dir = 'uploads/') {
     // Validasi file
+    if (!isset($file['name']) || !isset($file['tmp_name'])) {
+        return array('success' => false, 'message' => 'File tidak valid');
+    }
+    
     $allowed_types = array('jpg', 'jpeg', 'png', 'gif');
     $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     

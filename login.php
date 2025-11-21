@@ -7,7 +7,7 @@ if (isLoggedIn()) {
     if (isAdmin()) {
         redirect('admin/dashboard.php');
     } else {
-        redirect('read-book.php');
+        redirect('index.php');
     }
 }
 
@@ -33,10 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Verifikasi password
             if (password_verify($password, $user['password'])) {
                 // Cek apakah email sudah diverifikasi
-                // if ($user['email_verified'] == 0) {
-                //     $error = 'Email Anda belum diverifikasi. Silakan cek email untuk link verifikasi.';
-                // } else 
-                {
+                if ($user['email_verified'] == 0) {
+                    $error = 'Email Anda belum diverifikasi. Silakan cek email untuk link verifikasi.';
+                } else {
                     // Set session
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['username'] = $user['username'];
@@ -48,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if ($user['role'] == 'admin') {
                         redirect('admin/dashboard.php');
                     } else {
-                        redirect('read-book.php');
+                        redirect('index.php');
                     }
                 }
             } else {

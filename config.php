@@ -24,8 +24,8 @@ define('UPLOAD_PATH', __DIR__ . '/uploads/');
 define('SMTP_HOST', 'smtp.gmail.com');        // Host SMTP
 define('SMTP_PORT', 587);                      // Port SMTP
 define('SMTP_USER', 'skybooking04@gmail.com');   // Email Anda - GANTI INI
-define('SMTP_PASS', 'mqhn zyii witx khdw');      // App Password Gmail - GANTI INI
-define('SMTP_FROM', 'lestaridifka@gmail.com');   // Email pengirim - GANTI INI
+define('SMTP_PASS', 'ursd jsju rtdc vjdb');      // App Password Gmail - GANTI INI
+define('SMTP_FROM', 'skybooking04@gmail.com');   // Email pengirim - GANTI INI
 define('SMTP_FROM_NAME', 'Perpustakaan Online'); // Nama pengirim
 
 // Konfigurasi Session
