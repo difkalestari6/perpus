@@ -1,0 +1,174 @@
+2025-11-29 14:08:01 - Midtrans Request - Data: {"transaction_details":{"order_id":"SUB-2-2-1764425279","gross_amount":50000},"customer_details":{"first_name":"tari ayu","email":"difkalestari6@gmail.com"},"item_details":[{"id":"SUB-2","price":50000,"quantity":1,"name":"Paket Bulanan - 30 hari"}],"callbacks":{"finish":"http:\/\/localhost\/perpus\/payment-finish.php?order_id=SUB-2-2-1764425279&type=subscription"}}
+2025-11-29 14:08:02 - Midtrans Response - Data: {"http_code":404,"response":"","curl_error":""}
+2025-11-29 14:08:02 - Exception caught - Data: {"message":"Invalid JSON response from Midtrans: Syntax error","file":"C:\\laragon\\www\\perpus\\payment-process.php","line":274}
+2025-11-29 14:11:46 - Midtrans Request - Data: {"transaction_details":{"order_id":"SUB-2-2-1764425504","gross_amount":50000},"customer_details":{"first_name":"tari ayu","email":"difkalestari6@gmail.com"},"item_details":[{"id":"SUB-2","price":50000,"quantity":1,"name":"Paket Bulanan - 30 hari"}],"callbacks":{"finish":"http:\/\/localhost\/perpus\/payment-finish.php?order_id=SUB-2-2-1764425504&type=subscription"}}
+2025-11-29 14:11:47 - Midtrans Response - Data: {"http_code":404,"response":"","curl_error":""}
+2025-11-29 14:11:47 - Exception caught - Data: {"message":"Invalid JSON response from Midtrans: Syntax error","file":"C:\\laragon\\www\\perpus\\payment-process.php","line":274}
+2025-11-29 14:12:49 - Midtrans Request - Data: {"transaction_details":{"order_id":"SUB-2-2-1764425567","gross_amount":50000},"customer_details":{"first_name":"tari ayu","email":"difkalestari6@gmail.com"},"item_details":[{"id":"SUB-2","price":50000,"quantity":1,"name":"Paket Bulanan - 30 hari"}],"callbacks":{"finish":"http:\/\/localhost\/perpus\/payment-finish.php?order_id=SUB-2-2-1764425567&type=subscription"}}
+2025-11-29 14:12:50 - Midtrans Response - Data: {"http_code":404,"response":"","curl_error":""}
+2025-11-29 14:12:50 - Exception caught - Data: {"message":"Invalid JSON response from Midtrans: Syntax error","file":"C:\\laragon\\www\\perpus\\payment-process.php","line":274}
+2025-11-29 14:16:20 - Midtrans Request - Data: {"transaction_details":{"order_id":"SUB-2-2-1764425776","gross_amount":50000},"customer_details":{"first_name":"tari ayu","email":"difkalestari6@gmail.com"},"item_details":[{"id":"SUB-2","price":50000,"quantity":1,"name":"Paket Bulanan - 30 hari"}],"callbacks":{"finish":"http:\/\/localhost\/perpus\/payment-finish.php?order_id=SUB-2-2-1764425776&type=subscription"}}
+2025-11-29 14:16:21 - Midtrans Response - Data: {"http_code":404,"response":"","curl_error":""}
+2025-11-29 14:16:21 - Exception caught - Data: {"message":"Invalid JSON response from Midtrans: Syntax error","file":"C:\\laragon\\www\\perpus\\payment-process.php","line":274}
+2025-11-29 14:26:44 - MOCK PAYMENT
+Array
+(
+    [order_id] => SUB-2-2-1764426401
+    [amount] => 50000
+    [type] => subscription
+)
+
+
+2025-11-29 14:28:10 - MOCK PAYMENT
+Array
+(
+    [order_id] => SUB-3-2-1764426473
+    [amount] => 500000
+    [type] => subscription
+)
+
+
+2025-11-29 14:32:43 - MIDTRANS REQUEST
+Array
+(
+    [transaction_details] => Array
+        (
+            [order_id] => SUB-2-2-1764426760
+            [gross_amount] => 50000
+        )
+
+    [customer_details] => Array
+        (
+            [first_name] => tari ayu
+            [email] => difkalestari6@gmail.com
+        )
+
+    [item_details] => Array
+        (
+            [0] => Array
+                (
+                    [id] => SUB-2
+                    [price] => 50000
+                    [quantity] => 1
+                    [name] => Paket Bulanan - 30 hari
+                )
+
+        )
+
+)
+
+
+2025-11-29 14:32:43 - MIDTRANS RESPONSE
+Array
+(
+    [http_code] => 404
+    [response] => 
+    [curl_error] => 
+)
+
+
+2025-11-29 14:32:43 - EXCEPTION
+Array
+(
+    [message] => Empty response from Midtrans
+    [file] => C:\laragon\www\perpus\payment-process.php
+    [line] => 269
+)
+
+
+2025-11-29 14:43:05 - MIDTRANS REQUEST
+Array
+(
+    [transaction_details] => Array
+        (
+            [order_id] => SUB-2-2-1764427383
+            [gross_amount] => 50000
+        )
+
+    [customer_details] => Array
+        (
+            [first_name] => tari ayu
+            [email] => difkalestari6@gmail.com
+        )
+
+    [item_details] => Array
+        (
+            [0] => Array
+                (
+                    [id] => SUB-2
+                    [price] => 50000
+                    [quantity] => 1
+                    [name] => Paket Bulanan - 30 hari
+                )
+
+        )
+
+)
+
+
+2025-11-29 14:43:05 - MIDTRANS RESPONSE
+Array
+(
+    [http_code] => 404
+    [response] => 
+    [curl_error] => 
+)
+
+
+2025-11-29 14:43:05 - EXCEPTION
+Array
+(
+    [message] => Empty response from Midtrans
+    [file] => C:\laragon\www\perpus\payment-process.php
+    [line] => 269
+)
+
+
+2025-11-29 14:54:29 - MIDTRANS REQUEST
+Array
+(
+    [transaction_details] => Array
+        (
+            [order_id] => SUB-2-2-1764427411
+            [gross_amount] => 50000
+        )
+
+    [customer_details] => Array
+        (
+            [first_name] => tari ayu
+            [email] => difkalestari6@gmail.com
+        )
+
+    [item_details] => Array
+        (
+            [0] => Array
+                (
+                    [id] => SUB-2
+                    [price] => 50000
+                    [quantity] => 1
+                    [name] => Paket Bulanan - 30 hari
+                )
+
+        )
+
+)
+
+
+2025-11-29 14:54:29 - MIDTRANS RESPONSE
+Array
+(
+    [http_code] => 404
+    [response] => 
+    [curl_error] => 
+)
+
+
+2025-11-29 14:54:29 - EXCEPTION
+Array
+(
+    [message] => Empty response from Midtrans
+    [file] => C:\laragon\www\perpus\payment-process.php
+    [line] => 269
+)
+
+

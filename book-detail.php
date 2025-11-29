@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once 'config.php';
-require_once 'functions.php'; // Pastikan ada ini
+require_once 'functions.php';
 
 $book_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
@@ -27,31 +27,8 @@ $can_read = false;
 $already_purchased = false;
 
 if ($user_id) {
-    $can_read = canReadBook($conn, $user_id, $book_id);
+    $can_read = canReadBook($conn, $user_id, $book);
     $already_purchased = hasPurchasedBook($conn, $user_id, $book_id);
-}
-
-// Handle pembelian buku
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_book'])) {
-    if (!isLoggedIn()) {
-        redirect('login.php');
-    }
-    
-    if (!$already_purchased) {
-        // Insert pembelian
-        $insert_purchase = "INSERT INTO book_purchases (user_id, book_id, price) VALUES (?, ?, ?)";
-        $stmt = mysqli_prepare($conn, $insert_purchase);
-        mysqli_stmt_bind_param($stmt, "iid", $user_id, $book_id, $book['price']);
-        mysqli_stmt_execute($stmt);
-        
-        // Insert transaksi
-        $insert_transaction = "INSERT INTO transactions (user_id, type, reference_id, amount) VALUES (?, 'book', ?, ?)";
-        $stmt = mysqli_prepare($conn, $insert_transaction);
-        mysqli_stmt_bind_param($stmt, "iid", $user_id, $book_id, $book['price']);
-        mysqli_stmt_execute($stmt);
-        
-        redirect('book-detail.php?id=' . $book_id . '&success=1');
-    }
 }
 
 $success = isset($_GET['success']) ? true : false;
@@ -149,7 +126,7 @@ $success = isset($_GET['success']) ? true : false;
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-    <!-- Navbar dengan Glass Effect -->
+    <!-- Navbar -->
     <nav class="glass-effect shadow-xl sticky top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
@@ -285,13 +262,11 @@ $success = isset($_GET['success']) ? true : false;
                                     <?php endif; ?>
                                 <?php else: ?>
                                     <?php if (isLoggedIn()): ?>
-                                        <form method="POST">
-                                            <button type="submit" name="buy_book"
-                                                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-10 py-4 rounded-2xl hover:shadow-2xl font-bold text-xl transform hover:scale-105 transition btn-glow"
-                                                    onclick="return confirm('Apakah Anda yakin ingin membeli buku ini seharga <?php echo formatRupiah($book['price']); ?>?')">
-                                                🛒 Beli Sekarang - <?php echo formatRupiah($book['price']); ?>
-                                            </button>
-                                        </form>
+                                        <!-- UPDATED: Redirect ke checkout page -->
+                                        <a href="checkout-book.php?id=<?php echo $book_id; ?>"
+                                           class="block text-center w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-10 py-4 rounded-2xl hover:shadow-2xl font-bold text-xl transform hover:scale-105 transition btn-glow">
+                                            🛒 Beli Sekarang - <?php echo formatRupiah($book['price']); ?>
+                                        </a>
                                         <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 p-6 rounded-2xl">
                                             <p class="text-gray-700 text-center">
                                                 <span class="font-semibold">💡 Hemat lebih banyak!</span><br>

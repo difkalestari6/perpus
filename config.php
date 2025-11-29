@@ -21,17 +21,44 @@ define('BASE_URL', 'http://localhost/perpus/');
 define('UPLOAD_PATH', __DIR__ . '/uploads/');
 
 // Konfigurasi Email (PHPMailer)
-define('SMTP_HOST', 'smtp.gmail.com');        // Host SMTP
-define('SMTP_PORT', 587);                      // Port SMTP
-define('SMTP_USER', 'skybooking04@gmail.com');   // Email Anda - GANTI INI
-define('SMTP_PASS', 'ursd jsju rtdc vjdb');      // App Password Gmail - GANTI INI
-define('SMTP_FROM', 'skybooking04@gmail.com');   // Email pengirim - GANTI INI
-define('SMTP_FROM_NAME', 'Perpustakaan Online'); // Nama pengirim
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_PORT', 587);
+define('SMTP_USER', 'skybooking04@gmail.com');
+define('SMTP_PASS', 'ursd jsju rtdc vjdb');
+define('SMTP_FROM', 'skybooking04@gmail.com');
+define('SMTP_FROM_NAME', 'Perpustakaan Online');
+
+// ========================================
+// KONFIGURASI PAYMENT MODE
+// ========================================
+
+// PAYMENT_MODE Options:
+// 'midtrans' = Gunakan Midtrans payment gateway (perlu kredensial valid)
+// 'mock'     = Simulasi pembayaran (untuk testing/demo)
+define('PAYMENT_MODE', 'midtrans'); // Ubah ke 'midtrans' jika sudah punya kredensial valid
+
+// ========================================
+// KONFIGURASI MIDTRANS (Opsional)
+// ========================================
+// Hanya digunakan jika PAYMENT_MODE = 'midtrans'
+
+// Cara mendapatkan kredensial:
+// 1. Daftar di https://dashboard.sandbox.midtrans.com/register
+// 2. Verifikasi email
+// 3. Login dan masuk ke Settings → Access Keys
+// 4. Copy Server Key dan Client Key
+// 5. Paste di bawah ini
+
+define('MIDTRANS_SERVER_KEY', '');
+define('MIDTRANS_CLIENT_KEY', 'git');
+define('MIDTRANS_IS_PRODUCTION', false);
+define('MIDTRANS_SNAP_URL', MIDTRANS_IS_PRODUCTION ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js');
+define('MIDTRANS_API_URL', MIDTRANS_IS_PRODUCTION ? 'https://api.midtrans.com/v2' : 'https://api.sandbox.midtrans.com/v2');
 
 // Konfigurasi Session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Include file functions - SEMUA fungsi helper ada di sini
+// Include file functions
 require_once __DIR__ . '/functions.php';
