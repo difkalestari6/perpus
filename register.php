@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Header -->
         <div class="text-center mb-8">
             <div class="text-5xl mb-3">📚</div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Daftar Akun</h1>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Daftar Akunnn</h1>
             <p class="text-gray-600 text-sm">Perpustakaan Online</p>
         </div>
         
