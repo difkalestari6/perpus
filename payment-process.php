@@ -235,9 +235,16 @@ try {
 
     logError('MIDTRANS REQUEST', $params);
 
+    // ========================================
+    // FIX: URL Endpoint yang Benar
+    // ========================================
+    $midtrans_url = MIDTRANS_IS_PRODUCTION 
+        ? 'https://app.midtrans.com/snap/v1/transactions' 
+        : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+
     // Call Midtrans Snap API
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, MIDTRANS_API_URL . '/snap/transactions');
+    curl_setopt($ch, CURLOPT_URL, $midtrans_url);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -253,12 +260,13 @@ try {
     $response = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curl_error = curl_error($ch);
-    curl_close($ch);
+    // curl_close($ch);
 
     logError('MIDTRANS RESPONSE', [
         'http_code' => $http_code,
         'response' => $response,
-        'curl_error' => $curl_error
+        'curl_error' => $curl_error,
+        'url' => $midtrans_url
     ]);
 
     if ($curl_error) {
@@ -266,7 +274,7 @@ try {
     }
 
     if (empty($response)) {
-        throw new Exception('Empty response from Midtrans');
+        throw new Exception('Empty response from Midtrans (HTTP ' . $http_code . ')');
     }
 
     $result = json_decode($response, true);

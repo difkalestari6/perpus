@@ -12,8 +12,8 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'midtrans';
 
 $user_id = getUserId();
 
-// Jika mode mock, langsung update ke success
-if ($mode === 'mock' && $status === 'success') {
+// Jika mode mock atau status success, update database
+if (($mode === 'mock' || $status === 'success') && !empty($order_id)) {
     mysqli_begin_transaction($conn);
     
     try {
@@ -44,7 +44,9 @@ if ($mode === 'mock' && $status === 'success') {
             mysqli_stmt_execute($stmt);
         }
         
-        // Update transactions
+        // ========================================
+        // PENTING: Update status di tabel transactions
+        // ========================================
         $trans_query = "UPDATE transactions 
                         SET status = 'completed' 
                         WHERE order_id = ? AND user_id = ?";
@@ -53,9 +55,14 @@ if ($mode === 'mock' && $status === 'success') {
         mysqli_stmt_execute($stmt_trans);
         
         mysqli_commit($conn);
+        
+        // Force status to success after successful update
+        $status = 'success';
+        
     } catch (Exception $e) {
         mysqli_rollback($conn);
         $status = 'error';
+        error_log('Payment finish error: ' . $e->getMessage());
     }
 }
 

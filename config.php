@@ -35,22 +35,15 @@ define('SMTP_FROM_NAME', 'Perpustakaan Online');
 // PAYMENT_MODE Options:
 // 'midtrans' = Gunakan Midtrans payment gateway (perlu kredensial valid)
 // 'mock'     = Simulasi pembayaran (untuk testing/demo)
-define('PAYMENT_MODE', 'midtrans'); // Ubah ke 'midtrans' jika sudah punya kredensial valid
+define('PAYMENT_MODE', 'midtrans');
 
 // ========================================
-// KONFIGURASI MIDTRANS (Opsional)
+// KONFIGURASI MIDTRANS
 // ========================================
-// Hanya digunakan jika PAYMENT_MODE = 'midtrans'
 
-// Cara mendapatkan kredensial:
-// 1. Daftar di https://dashboard.sandbox.midtrans.com/register
-// 2. Verifikasi email
-// 3. Login dan masuk ke Settings → Access Keys
-// 4. Copy Server Key dan Client Key
-// 5. Paste di bawah ini
-
+// PENTING: Copy PERSIS dari dashboard, JANGAN tambah prefix "SB-"
 define('MIDTRANS_SERVER_KEY', '');
-define('MIDTRANS_CLIENT_KEY', 'git');
+define('MIDTRANS_CLIENT_KEY', '');
 define('MIDTRANS_IS_PRODUCTION', false);
 define('MIDTRANS_SNAP_URL', MIDTRANS_IS_PRODUCTION ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js');
 define('MIDTRANS_API_URL', MIDTRANS_IS_PRODUCTION ? 'https://api.midtrans.com/v2' : 'https://api.sandbox.midtrans.com/v2');
